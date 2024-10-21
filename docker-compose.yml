@@ -11,6 +11,9 @@ services:
         - action: sync
           path: .
           target: /tributary
+          ignore:
+            - "*"
+            - "!*.py"
 
   redis:
     image: redis:alpine3.20

@@ -29,4 +29,14 @@ def record_engine_temperature():
 
 @app.route('/collect', methods=['POST'])
 def collect_engine_temperature():
-    return {"success": True}, 200
+    try:
+        all_engine_temps = db.lrange(DATA_KEY, 0, -1)
+        all_engine_temps_count = len(all_engine_temps)
+
+        current_engine_temp = float(all_engine_temps[0])
+        avg_engine_temp = sum([float(temp) for temp in all_engine_temps]) / all_engine_temps_count
+
+        return {"current_engine_temperature": current_engine_temp, "average_engine_temperature": avg_engine_temp}, 200
+    except Exception as e:
+        logger.error(f"error collecting engine temperature: {e}")
+        return {"error": str(e)}, 500
