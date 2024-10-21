@@ -1,0 +1,18 @@
+services:
+  tributary:
+    depends_on:
+      - redis
+    build: .
+    command: gunicorn --bind 0.0.0.0:8000 --reload entrypoint:app
+    ports:
+      - "8000:8000"
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /tributary
+
+  redis:
+    image: redis:alpine3.20
+    ports:
+      - "6379:6379"
